@@ -1,0 +1,304 @@
+local TweenService = game:GetService("TweenService")
+local Players      = game:GetService("Players")
+local UIS          = game:GetService("UserInputService")
+
+local player    = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui", 10)
+if not playerGui then return end
+
+local old = playerGui:FindFirstChild("_ExecPanel")
+if old then old:Destroy() end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name           = "_ExecPanel"
+screenGui.ResetOnSpawn   = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.IgnoreGuiInset = true
+screenGui.DisplayOrder   = 9999
+screenGui.Parent         = playerGui
+
+local LOAD_TIME    = 15
+local PANEL_W      = 400
+local PANEL_H_FULL = 200
+local PANEL_H_MINI = 34
+
+local STATUS_MESSAGES = {
+    "Fetching UI and Options...",
+    "Verifying snowfall.cc...",
+    "Building interface...",
+    "Applying configurations...",
+    "Thanks for using snowfall.cc!",
+}
+
+local panel = Instance.new("Frame")
+panel.Name                   = "Panel"
+panel.Size                   = UDim2.new(0, PANEL_W, 0, PANEL_H_FULL)
+panel.Position               = UDim2.new(0.5, -PANEL_W/2, 0, 24)
+panel.BackgroundColor3       = Color3.fromRGB(11, 11, 11)
+panel.BorderSizePixel        = 0
+panel.BackgroundTransparency = 1
+panel.ClipsDescendants       = true
+panel.Parent                 = screenGui
+Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 12)
+
+local panelStroke = Instance.new("UIStroke", panel)
+panelStroke.Color        = Color3.fromRGB(48, 48, 48)
+panelStroke.Thickness    = 1
+panelStroke.Transparency = 1
+
+local titleBar = Instance.new("Frame", panel)
+titleBar.Name                   = "TitleBar"
+titleBar.Size                   = UDim2.new(1, 0, 0, PANEL_H_MINI)
+titleBar.Position               = UDim2.new(0, 0, 0, 0)
+titleBar.BackgroundColor3       = Color3.fromRGB(17, 17, 17)
+titleBar.BorderSizePixel        = 0
+titleBar.BackgroundTransparency = 1
+titleBar.ZIndex                 = 3
+
+local sep = Instance.new("Frame", titleBar)
+sep.Size             = UDim2.new(1, 0, 0, 1)
+sep.Position         = UDim2.new(0, 0, 1, -1)
+sep.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+sep.BorderSizePixel  = 0
+sep.BackgroundTransparency = 1
+
+local titleIcon = Instance.new("Frame", titleBar)
+titleIcon.Size             = UDim2.new(0, 8, 0, 8)
+titleIcon.Position         = UDim2.new(0, 13, 0.5, 0)
+titleIcon.AnchorPoint      = Vector2.new(0, 0.5)
+titleIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+titleIcon.BorderSizePixel  = 0
+titleIcon.Rotation         = 45
+titleIcon.BackgroundTransparency = 1
+Instance.new("UICorner", titleIcon).CornerRadius = UDim.new(0, 2)
+
+local titleText = Instance.new("TextLabel", titleBar)
+titleText.Size               = UDim2.new(1, -60, 1, 0)
+titleText.Position           = UDim2.new(0, 28, 0, 0)
+titleText.BackgroundTransparency = 1
+titleText.Text               = "Snowfall.cc Loader v1.0"
+titleText.Font               = Enum.Font.GothamBold
+titleText.TextSize           = 11
+titleText.TextColor3         = Color3.fromRGB(190, 190, 190)
+titleText.TextXAlignment     = Enum.TextXAlignment.Left
+titleText.TextTransparency   = 1
+
+local minBtn = Instance.new("TextButton", titleBar)
+minBtn.Size               = UDim2.new(0, 24, 0, 24)
+minBtn.Position           = UDim2.new(1, -30, 0.5, 0)
+minBtn.AnchorPoint        = Vector2.new(0, 0.5)
+minBtn.BackgroundColor3   = Color3.fromRGB(38, 38, 38)
+minBtn.BorderSizePixel    = 0
+minBtn.Text               = "–"
+minBtn.Font               = Enum.Font.GothamBold
+minBtn.TextSize           = 12
+minBtn.TextColor3         = Color3.fromRGB(150, 150, 150)
+minBtn.BackgroundTransparency = 0.4
+minBtn.ZIndex             = 4
+Instance.new("UICorner", minBtn).CornerRadius = UDim.new(0, 6)
+
+local body = Instance.new("Frame", panel)
+body.Name                   = "Body"
+body.Size                   = UDim2.new(1, 0, 1, -PANEL_H_MINI)
+body.Position               = UDim2.new(0, 0, 0, PANEL_H_MINI)
+body.BackgroundTransparency = 1
+body.ClipsDescendants       = false
+
+local subLabel = Instance.new("TextLabel", body)
+subLabel.Size               = UDim2.new(1, -28, 0, 28)
+subLabel.Position           = UDim2.new(0, 14, 0, 12)
+subLabel.BackgroundTransparency = 1
+subLabel.Text               = "Please wait while we prepare your experience"
+subLabel.Font               = Enum.Font.Gotham
+subLabel.TextSize           = 12
+subLabel.TextColor3         = Color3.fromRGB(130, 130, 130)
+subLabel.TextXAlignment     = Enum.TextXAlignment.Left
+subLabel.TextWrapped        = true
+subLabel.TextTransparency   = 1
+
+local statusLabel = Instance.new("TextLabel", body)
+statusLabel.Size               = UDim2.new(0.62, -14, 0, 15)
+statusLabel.Position           = UDim2.new(0, 14, 0, 60)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text               = STATUS_MESSAGES[1]
+statusLabel.Font               = Enum.Font.Gotham
+statusLabel.TextSize           = 11
+statusLabel.TextColor3         = Color3.fromRGB(85, 85, 85)
+statusLabel.TextXAlignment     = Enum.TextXAlignment.Left
+statusLabel.TextTransparency   = 1
+
+local pctLabel = Instance.new("TextLabel", body)
+pctLabel.Size               = UDim2.new(0.38, -14, 0, 15)
+pctLabel.Position           = UDim2.new(0.62, 0, 0, 60)
+pctLabel.BackgroundTransparency = 1
+pctLabel.Text               = "0%"
+pctLabel.Font               = Enum.Font.GothamMedium
+pctLabel.TextSize           = 11
+pctLabel.TextColor3         = Color3.fromRGB(85, 85, 85)
+pctLabel.TextXAlignment     = Enum.TextXAlignment.Right
+pctLabel.TextTransparency   = 1
+
+local barTrack = Instance.new("Frame", body)
+barTrack.Size             = UDim2.new(1, -28, 0, 3)
+barTrack.Position         = UDim2.new(0, 14, 0, 88)
+barTrack.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+barTrack.BorderSizePixel  = 0
+barTrack.BackgroundTransparency = 1
+Instance.new("UICorner", barTrack).CornerRadius = UDim.new(1, 0)
+
+local barFill = Instance.new("Frame", barTrack)
+barFill.Size             = UDim2.new(0, 0, 1, 0)
+barFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+barFill.BorderSizePixel  = 0
+Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
+
+local timerLabel = Instance.new("TextLabel", body)
+timerLabel.Size               = UDim2.new(1, -28, 0, 14)
+timerLabel.Position           = UDim2.new(0, 14, 0, 106)
+timerLabel.BackgroundTransparency = 1
+timerLabel.Text               = "0s  /  " .. LOAD_TIME .. "s"
+timerLabel.Font               = Enum.Font.Gotham
+timerLabel.TextSize           = 10
+timerLabel.TextColor3         = Color3.fromRGB(50, 50, 50)
+timerLabel.TextXAlignment     = Enum.TextXAlignment.Center
+timerLabel.TextTransparency   = 1
+
+local function tw(obj, props, t, style, dir)
+    local info = TweenInfo.new(
+        t     or 0.4,
+        style or Enum.EasingStyle.Quint,
+        dir   or Enum.EasingDirection.Out
+    )
+    local tween = TweenService:Create(obj, info, props)
+    tween:Play()
+    return tween
+end
+
+local dragging  = false
+local dragStart = nil
+local startPos  = nil
+
+titleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        dragging  = true
+        dragStart = input.Position
+        startPos  = panel.Position
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if not dragging then return end
+    if input.UserInputType == Enum.UserInputType.MouseMovement
+    or input.UserInputType == Enum.UserInputType.Touch then
+        local delta = input.Position - dragStart
+        panel.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
+end)
+
+local minimised = false
+
+minBtn.MouseButton1Click:Connect(function()
+    minimised = not minimised
+    if minimised then
+        tw(panel, {Size = UDim2.new(0, PANEL_W, 0, PANEL_H_MINI)}, 0.3, Enum.EasingStyle.Quint)
+        minBtn.Text = "+"
+    else
+        tw(panel, {Size = UDim2.new(0, PANEL_W, 0, PANEL_H_FULL)}, 0.35, Enum.EasingStyle.Back)
+        minBtn.Text = "–"
+    end
+end)
+
+minBtn.MouseEnter:Connect(function()
+    tw(minBtn, {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(230,230,230)}, 0.12)
+end)
+minBtn.MouseLeave:Connect(function()
+    tw(minBtn, {BackgroundTransparency = 0.4, TextColor3 = Color3.fromRGB(150,150,150)}, 0.12)
+end)
+
+local bodyLabels = {subLabel, statusLabel, pctLabel, timerLabel}
+
+local function fadeIn()
+    tw(panel,       {BackgroundTransparency = 0}, 0.4)
+    tw(panelStroke, {Transparency = 0}, 0.4)
+    task.wait(0.1)
+    tw(titleBar,  {BackgroundTransparency = 0}, 0.3)
+    tw(sep,       {BackgroundTransparency = 0}, 0.3)
+    tw(titleIcon, {BackgroundTransparency = 0}, 0.3)
+    tw(titleText, {TextTransparency = 0}, 0.3)
+    task.wait(0.1)
+    for _, l in ipairs(bodyLabels) do
+        tw(l, {TextTransparency = 0}, 0.35)
+    end
+    tw(barTrack, {BackgroundTransparency = 0}, 0.35)
+    task.wait(0.2)
+end
+
+local function fadeOut()
+    local FT = 0.4
+    for _, l in ipairs(bodyLabels) do
+        tw(l, {TextTransparency = 1}, FT, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+    end
+    tw(titleText,   {TextTransparency = 1}, FT, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+    tw(barTrack,    {BackgroundTransparency = 1}, FT, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+    tw(sep,         {BackgroundTransparency = 1}, FT, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+    tw(titleIcon,   {BackgroundTransparency = 1}, FT, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+    tw(panelStroke, {Transparency = 1}, FT, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+    task.wait(FT - 0.05)
+    local last = tw(panel, {
+        BackgroundTransparency = 1,
+        Position = UDim2.new(
+            panel.Position.X.Scale, panel.Position.X.Offset,
+            panel.Position.Y.Scale, panel.Position.Y.Offset - 10
+        )
+    }, 0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+    last.Completed:Wait()
+    screenGui:Destroy()
+end
+
+local function runLoadingScreen()
+    fadeIn()
+
+    local elapsed     = 0
+    local msgCount    = #STATUS_MESSAGES
+    local msgInterval = LOAD_TIME / msgCount
+    local lastMsg     = 0
+    local msgIdx      = 1
+
+    while elapsed < LOAD_TIME do
+        local dt = task.wait(0.033)
+        elapsed  = math.min(elapsed + dt, LOAD_TIME)
+        local p  = elapsed / LOAD_TIME
+
+        barFill.Size    = UDim2.new(p, 0, 1, 0)
+        pctLabel.Text   = math.floor(p * 100) .. "%"
+        timerLabel.Text = math.floor(elapsed) .. "s  /  " .. LOAD_TIME .. "s"
+
+        if (elapsed - lastMsg) >= msgInterval and msgIdx <= msgCount then
+            lastMsg = elapsed
+            statusLabel.TextTransparency = 0.75
+            statusLabel.Text = STATUS_MESSAGES[msgIdx]
+            tw(statusLabel, {TextTransparency = 0}, 0.2)
+            msgIdx = msgIdx + 1
+        end
+    end
+
+    barFill.Size    = UDim2.new(1, 0, 1, 0)
+    pctLabel.Text   = "100%"
+    timerLabel.Text = LOAD_TIME .. "s  /  " .. LOAD_TIME .. "s"
+    task.wait(0.35)
+
+    fadeOut()
+end
+
+runLoadingScreen()
