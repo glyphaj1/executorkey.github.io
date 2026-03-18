@@ -17,7 +17,7 @@ screenGui.IgnoreGuiInset = true
 screenGui.DisplayOrder   = 9999
 screenGui.Parent         = playerGui
 
-local LOAD_TIME    = 15
+local LOAD_TIME    = 17
 local PANEL_W      = 400
 local PANEL_H_FULL = 200
 local PANEL_H_MINI = 34
