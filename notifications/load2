@@ -1,3 +1,16 @@
+local STATUS_MESSAGES = {
+    "Attempting to load UI..",
+    "Attemtping to build interface..",
+    "Please be patient..",
+    "discord.gg/NCcTwpNQ2S",
+    "Wow this is really taking a long time to load..",
+}
+local MSG_INTERVAL = 3
+local TIMEOUT      = 30
+local PANEL_W      = 400
+local PANEL_H_FULL = 200
+local PANEL_H_MINI = 34
+
 local TweenService = game:GetService("TweenService")
 local Players      = game:GetService("Players")
 local UIS          = game:GetService("UserInputService")
@@ -16,19 +29,6 @@ screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.IgnoreGuiInset = true
 screenGui.DisplayOrder   = 9999
 screenGui.Parent         = playerGui
-
-local TIMEOUT  = 30
-local PANEL_W      = 400
-local PANEL_H_FULL = 200
-local PANEL_H_MINI = 34
-
-local STATUS_MESSAGES = {
-    "Fetching UI and Options...",
-    "Verifying snowfall.cc...",
-    "Building interface...",
-    "Applying configurations...",
-    "Thanks for using snowfall.cc!",
-}
 
 local panel = Instance.new("Frame")
 panel.Name                   = "Panel"
@@ -220,10 +220,10 @@ minBtn.MouseButton1Click:Connect(function()
 end)
 
 minBtn.MouseEnter:Connect(function()
-    tw(minBtn, {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(230,230,230)}, 0.12)
+    tw(minBtn, {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(230, 230, 230)}, 0.12)
 end)
 minBtn.MouseLeave:Connect(function()
-    tw(minBtn, {BackgroundTransparency = 0.4, TextColor3 = Color3.fromRGB(150,150,150)}, 0.12)
+    tw(minBtn, {BackgroundTransparency = 0.4, TextColor3 = Color3.fromRGB(150, 150, 150)}, 0.12)
 end)
 
 local bodyLabels = {subLabel, statusLabel, pctLabel, timerLabel}
@@ -269,17 +269,15 @@ end
 local function runLoadingScreen()
     fadeIn()
 
-    local elapsed     = 0
-    local msgCount    = #STATUS_MESSAGES
-    local msgInterval = TIMEOUT / msgCount
-    local lastMsg     = 0
-    local msgIdx      = 1
+    local elapsed  = 0
+    local lastMsg  = 0
+    local msgIdx   = 1
+    local msgCount = #STATUS_MESSAGES
 
     while not _G.Loaded and elapsed < TIMEOUT do
         local dt = task.wait(0.033)
         elapsed  = elapsed + dt
 
-        -- infinite bounce bar using sine wave
         local bouncePos  = (math.sin(elapsed * 2) + 1) / 2
         local fillWidth  = 0.35
         local startScale = math.clamp(bouncePos * (1 - fillWidth), 0, 1 - fillWidth)
@@ -288,12 +286,12 @@ local function runLoadingScreen()
 
         timerLabel.Text = math.floor(elapsed) .. "s"
 
-        if (elapsed - lastMsg) >= msgInterval and msgIdx <= msgCount then
+        if (elapsed - lastMsg) >= MSG_INTERVAL then
             lastMsg = elapsed
+            msgIdx  = (msgIdx % msgCount) + 1
             statusLabel.TextTransparency = 0.75
             statusLabel.Text = STATUS_MESSAGES[msgIdx]
             tw(statusLabel, {TextTransparency = 0}, 0.2)
-            msgIdx = msgIdx + 1
         end
     end
 
@@ -301,7 +299,6 @@ local function runLoadingScreen()
     barFill.Position = UDim2.new(0, 0, 0, 0)
     pctLabel.Text    = "Ready"
     task.wait(0.35)
-
     fadeOut()
 end
 
