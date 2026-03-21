@@ -17,7 +17,7 @@ screenGui.IgnoreGuiInset = true
 screenGui.DisplayOrder   = 9999
 screenGui.Parent         = playerGui
 
-local LOAD_TIME    = 17
+local TIMEOUT  = 30
 local PANEL_W      = 400
 local PANEL_H_FULL = 200
 local PANEL_H_MINI = 34
@@ -131,7 +131,7 @@ local pctLabel = Instance.new("TextLabel", body)
 pctLabel.Size               = UDim2.new(0.38, -14, 0, 15)
 pctLabel.Position           = UDim2.new(0.62, 0, 0, 60)
 pctLabel.BackgroundTransparency = 1
-pctLabel.Text               = "0%"
+pctLabel.Text               = "Loading..."
 pctLabel.Font               = Enum.Font.GothamMedium
 pctLabel.TextSize           = 11
 pctLabel.TextColor3         = Color3.fromRGB(85, 85, 85)
@@ -156,7 +156,7 @@ local timerLabel = Instance.new("TextLabel", body)
 timerLabel.Size               = UDim2.new(1, -28, 0, 14)
 timerLabel.Position           = UDim2.new(0, 14, 0, 106)
 timerLabel.BackgroundTransparency = 1
-timerLabel.Text               = "0s  /  " .. LOAD_TIME .. "s"
+timerLabel.Text               = "0s"
 timerLabel.Font               = Enum.Font.Gotham
 timerLabel.TextSize           = 10
 timerLabel.TextColor3         = Color3.fromRGB(50, 50, 50)
@@ -271,18 +271,22 @@ local function runLoadingScreen()
 
     local elapsed     = 0
     local msgCount    = #STATUS_MESSAGES
-    local msgInterval = LOAD_TIME / msgCount
+    local msgInterval = TIMEOUT / msgCount
     local lastMsg     = 0
     local msgIdx      = 1
 
-    while elapsed < LOAD_TIME do
+    while not _G.Loaded and elapsed < TIMEOUT do
         local dt = task.wait(0.033)
-        elapsed  = math.min(elapsed + dt, LOAD_TIME)
-        local p  = elapsed / LOAD_TIME
+        elapsed  = elapsed + dt
 
-        barFill.Size    = UDim2.new(p, 0, 1, 0)
-        pctLabel.Text   = math.floor(p * 100) .. "%"
-        timerLabel.Text = math.floor(elapsed) .. "s  /  " .. LOAD_TIME .. "s"
+        -- infinite bounce bar using sine wave
+        local bouncePos  = (math.sin(elapsed * 2) + 1) / 2
+        local fillWidth  = 0.35
+        local startScale = math.clamp(bouncePos * (1 - fillWidth), 0, 1 - fillWidth)
+        barFill.Size     = UDim2.new(fillWidth, 0, 1, 0)
+        barFill.Position = UDim2.new(startScale, 0, 0, 0)
+
+        timerLabel.Text = math.floor(elapsed) .. "s"
 
         if (elapsed - lastMsg) >= msgInterval and msgIdx <= msgCount then
             lastMsg = elapsed
@@ -293,9 +297,9 @@ local function runLoadingScreen()
         end
     end
 
-    barFill.Size    = UDim2.new(1, 0, 1, 0)
-    pctLabel.Text   = "100%"
-    timerLabel.Text = LOAD_TIME .. "s  /  " .. LOAD_TIME .. "s"
+    barFill.Size     = UDim2.new(1, 0, 1, 0)
+    barFill.Position = UDim2.new(0, 0, 0, 0)
+    pctLabel.Text    = "Ready"
     task.wait(0.35)
 
     fadeOut()
