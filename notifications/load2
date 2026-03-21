@@ -1,6 +1,6 @@
 local STATUS_MESSAGES = {
     "Attempting to load UI..",
-    "Attemtping to build interface..",
+    "Attempting to build interface",
     "Please be patient..",
     "discord.gg/NCcTwpNQ2S",
     "Wow this is really taking a long time to load..",
@@ -34,7 +34,7 @@ local panel = Instance.new("Frame")
 panel.Name                   = "Panel"
 panel.Size                   = UDim2.new(0, PANEL_W, 0, PANEL_H_FULL)
 panel.Position               = UDim2.new(0.5, -PANEL_W/2, 0, 24)
-panel.BackgroundColor3       = Color3.fromRGB(11, 11, 11)
+panel.BackgroundColor3       = Color3.fromHex("1d1b26")
 panel.BorderSizePixel        = 0
 panel.BackgroundTransparency = 1
 panel.ClipsDescendants       = true
@@ -42,7 +42,7 @@ panel.Parent                 = screenGui
 Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 12)
 
 local panelStroke = Instance.new("UIStroke", panel)
-panelStroke.Color        = Color3.fromRGB(48, 48, 48)
+panelStroke.Color        = Color3.fromHex("27232f")
 panelStroke.Thickness    = 1
 panelStroke.Transparency = 1
 
@@ -50,7 +50,7 @@ local titleBar = Instance.new("Frame", panel)
 titleBar.Name                   = "TitleBar"
 titleBar.Size                   = UDim2.new(1, 0, 0, PANEL_H_MINI)
 titleBar.Position               = UDim2.new(0, 0, 0, 0)
-titleBar.BackgroundColor3       = Color3.fromRGB(17, 17, 17)
+titleBar.BackgroundColor3       = Color3.fromHex("232330")
 titleBar.BorderSizePixel        = 0
 titleBar.BackgroundTransparency = 1
 titleBar.ZIndex                 = 3
@@ -58,7 +58,7 @@ titleBar.ZIndex                 = 3
 local sep = Instance.new("Frame", titleBar)
 sep.Size             = UDim2.new(1, 0, 0, 1)
 sep.Position         = UDim2.new(0, 0, 1, -1)
-sep.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+sep.BackgroundColor3 = Color3.fromHex("27232f")
 sep.BorderSizePixel  = 0
 sep.BackgroundTransparency = 1
 
@@ -66,7 +66,7 @@ local titleIcon = Instance.new("Frame", titleBar)
 titleIcon.Size             = UDim2.new(0, 8, 0, 8)
 titleIcon.Position         = UDim2.new(0, 13, 0.5, 0)
 titleIcon.AnchorPoint      = Vector2.new(0, 0.5)
-titleIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+titleIcon.BackgroundColor3 = Color3.fromHex("426e87")
 titleIcon.BorderSizePixel  = 0
 titleIcon.Rotation         = 45
 titleIcon.BackgroundTransparency = 1
@@ -79,7 +79,7 @@ titleText.BackgroundTransparency = 1
 titleText.Text               = "Snowfall.cc Loader v1.0"
 titleText.Font               = Enum.Font.GothamBold
 titleText.TextSize           = 11
-titleText.TextColor3         = Color3.fromRGB(190, 190, 190)
+titleText.TextColor3         = Color3.fromHex("ffffff")
 titleText.TextXAlignment     = Enum.TextXAlignment.Left
 titleText.TextTransparency   = 1
 
@@ -87,12 +87,12 @@ local minBtn = Instance.new("TextButton", titleBar)
 minBtn.Size               = UDim2.new(0, 24, 0, 24)
 minBtn.Position           = UDim2.new(1, -30, 0.5, 0)
 minBtn.AnchorPoint        = Vector2.new(0, 0.5)
-minBtn.BackgroundColor3   = Color3.fromRGB(38, 38, 38)
+minBtn.BackgroundColor3   = Color3.fromHex("27232f")
 minBtn.BorderSizePixel    = 0
 minBtn.Text               = "–"
 minBtn.Font               = Enum.Font.GothamBold
 minBtn.TextSize           = 12
-minBtn.TextColor3         = Color3.fromRGB(150, 150, 150)
+minBtn.TextColor3         = Color3.fromHex("ffffff")
 minBtn.BackgroundTransparency = 0.4
 minBtn.ZIndex             = 4
 Instance.new("UICorner", minBtn).CornerRadius = UDim.new(0, 6)
@@ -111,7 +111,7 @@ subLabel.BackgroundTransparency = 1
 subLabel.Text               = "Please wait while we prepare your experience"
 subLabel.Font               = Enum.Font.Gotham
 subLabel.TextSize           = 12
-subLabel.TextColor3         = Color3.fromRGB(130, 130, 130)
+subLabel.TextColor3         = Color3.fromHex("ffffff")
 subLabel.TextXAlignment     = Enum.TextXAlignment.Left
 subLabel.TextWrapped        = true
 subLabel.TextTransparency   = 1
@@ -123,7 +123,7 @@ statusLabel.BackgroundTransparency = 1
 statusLabel.Text               = STATUS_MESSAGES[1]
 statusLabel.Font               = Enum.Font.Gotham
 statusLabel.TextSize           = 11
-statusLabel.TextColor3         = Color3.fromRGB(85, 85, 85)
+statusLabel.TextColor3         = Color3.fromHex("426e87")
 statusLabel.TextXAlignment     = Enum.TextXAlignment.Left
 statusLabel.TextTransparency   = 1
 
@@ -134,21 +134,21 @@ pctLabel.BackgroundTransparency = 1
 pctLabel.Text               = "Loading..."
 pctLabel.Font               = Enum.Font.GothamMedium
 pctLabel.TextSize           = 11
-pctLabel.TextColor3         = Color3.fromRGB(85, 85, 85)
+pctLabel.TextColor3         = Color3.fromHex("426e87")
 pctLabel.TextXAlignment     = Enum.TextXAlignment.Right
 pctLabel.TextTransparency   = 1
 
 local barTrack = Instance.new("Frame", body)
 barTrack.Size             = UDim2.new(1, -28, 0, 3)
 barTrack.Position         = UDim2.new(0, 14, 0, 88)
-barTrack.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+barTrack.BackgroundColor3 = Color3.fromHex("27232f")
 barTrack.BorderSizePixel  = 0
 barTrack.BackgroundTransparency = 1
 Instance.new("UICorner", barTrack).CornerRadius = UDim.new(1, 0)
 
 local barFill = Instance.new("Frame", barTrack)
 barFill.Size             = UDim2.new(0, 0, 1, 0)
-barFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+barFill.BackgroundColor3 = Color3.fromHex("426e87")
 barFill.BorderSizePixel  = 0
 Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
 
@@ -159,7 +159,7 @@ timerLabel.BackgroundTransparency = 1
 timerLabel.Text               = "0s"
 timerLabel.Font               = Enum.Font.Gotham
 timerLabel.TextSize           = 10
-timerLabel.TextColor3         = Color3.fromRGB(50, 50, 50)
+timerLabel.TextColor3         = Color3.fromHex("27232f")
 timerLabel.TextXAlignment     = Enum.TextXAlignment.Center
 timerLabel.TextTransparency   = 1
 
@@ -220,10 +220,10 @@ minBtn.MouseButton1Click:Connect(function()
 end)
 
 minBtn.MouseEnter:Connect(function()
-    tw(minBtn, {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(230, 230, 230)}, 0.12)
+    tw(minBtn, {BackgroundTransparency = 0, TextColor3 = Color3.fromHex("426e87")}, 0.12)
 end)
 minBtn.MouseLeave:Connect(function()
-    tw(minBtn, {BackgroundTransparency = 0.4, TextColor3 = Color3.fromRGB(150, 150, 150)}, 0.12)
+    tw(minBtn, {BackgroundTransparency = 0.4, TextColor3 = Color3.fromHex("ffffff")}, 0.12)
 end)
 
 local bodyLabels = {subLabel, statusLabel, pctLabel, timerLabel}
